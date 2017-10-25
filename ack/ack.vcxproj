@@ -29,7 +29,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -76,6 +76,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -131,8 +134,10 @@
     <ClInclude Include="win.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ability.cpp" />
     <ClCompile Include="bitops.cpp" />
     <ClCompile Include="bstream.cpp" />
+    <ClCompile Include="class.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="crt.cpp" />
@@ -141,12 +146,16 @@
     <ClCompile Include="draw_input.cpp" />
     <ClCompile Include="draw_text.cpp" />
     <ClCompile Include="draw_textf.cpp" />
+    <ClCompile Include="hero.cpp" />
+    <ClCompile Include="hero_create.cpp" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="logs.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pma.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="print.cpp" />
+    <ClCompile Include="race.cpp" />
+    <ClCompile Include="skill.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stringcreator.cpp" />
     <ClCompile Include="surface.cpp" />

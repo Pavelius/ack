@@ -1,8 +1,12 @@
+#include "adat.h"
 #include "crt.h"
 #include "logs.h"
 
 #pragma once
 
+#define assert_enum(name, last) static_assert(sizeof(name##_data) / sizeof(name##_data[0]) == last + 1,\
+	"Invalid count of " #name " elements")
+#define getstr_enum(ename) template<> const char* getstr<ename##_s>(ename##_s value) { return ename##_data[value].name[1]; }
 #define maptbl(t, id) (t[imax(0, imin(id, (int)(sizeof(t)/sizeof(t[0]))))])
 
 enum class_s : unsigned char {
@@ -30,7 +34,7 @@ enum save_s : unsigned char {
 	SavePetrification, SaveParalizis, SavePoison, SaveDeath,
 	SaveBlast, SaveBreath, SaveStaffWands, SaveSpells
 };
-enum proficiency_s : unsigned char {
+enum skill_s : unsigned char {
 	Acrobatics, Alchemy, Alertness, Ambushing, AnimalHusbandry, AnimalTraining, Apostasy, ArcaneDabblin, Painting,
 	Bargaining, BattleMagic, BeastFriendship, Berserkergang, BlackLoreOfZahar, BlindFighting, Bribery,
 	Caving, CatBurglary, Climbing, CollegiateWizardry, CombatReflexes, CombatTrickery, Command, Contemplation, Contortionism,
@@ -122,7 +126,35 @@ struct hero
 	class_s				type;
 	char				level;
 	alignment_s			alignment;
-	const char*			getname();
+	short				hp;
+	//
+	void				add(skill_s id, int value) { proficiency[id] += value; }
+	void				chooseability();
+	void				chooseclass(bool interactive);
+	void				choosegender(bool interactive);
+	void				chooseskills(bool interactive, skill_s* source, unsigned maximum, int count = 1);
+	void				clear();
+	static hero*		create(bool interactive);
+	int					get(ability_s id) const { return ability[id]; }
+	int					get(skill_s id) const { return proficiency[id]; }
+	int					getbonus(ability_s id) const;
+	const char*			getname() const;
+	int					getmaxhp() const;
+	int					getprepared(skill_s id) const { return spell_prepared[id]; }
+	int					getprogress() const { return 4; }
+	void				levelup(bool interactive);
+	void				setprepared(skill_s id, int value) { spell_prepared[id] = (unsigned char)value; }
 private:
+	short				mhp;
+	unsigned char		ability[Charisma + 1];
+	unsigned char		proficiency[LastSkill + 1];
+	unsigned char		spell_prepared[LastSkill + 1];
 	unsigned char		name;
 };
+namespace game
+{
+	int					getdice(class_s id);
+	unsigned char*		getminimal(class_s id);
+	ability_s			getprime(class_s id);
+}
+extern adat<hero, 260>	heroes;

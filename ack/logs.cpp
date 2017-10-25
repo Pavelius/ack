@@ -264,9 +264,7 @@ int logs::inputv(bool interactive, bool clear_text, const char* format, const ch
 	{
 		if(p != content)
 			zcat(p, "\n");
-		zcat(p, "[");
 		logs::addv(format, param);
-		zcat(p, "]");
 	}
 	correct(logs::content);
 	if(element)

@@ -134,5 +134,23 @@
     <ClCompile Include="print.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
+    <ClCompile Include="hero.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="hero_create.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="race.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="ability.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="class.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="skill.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
