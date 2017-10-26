@@ -18,6 +18,30 @@ static skill_s cleric_skills[] = {
 	Prophecy, QuietMagic, RighteousTurning, SensingEvil, SensingPower,
 	Theology
 };
+static skill_s fighter_skills[] = {
+	Acrobatics, Alertness, Berserkergang,
+	BlindFighting, CombatReflexes, CombatTrickery, Command, DungeonBashing, Endurance,
+	FightingStyleDualWeapon, FightingStyleMissile, FightingStylePole, FightingStyleSigle, FightingStyleTwoHanded, FightingStyleWeaponAndShield,
+	Gambling, Intimidation, Leadership, MilitaryStrategy, PreciseShooting,
+	Riding, Running, Engineering, Skirmishing, Survival, Swashbuckling, WeaponFinesse,
+	WeaponFocusAxes, WeaponFocusBows, WeaponFocusSwords
+};
+static skill_s mage_skills[] = {
+	Alchemy, BattleMagic, BeastFriendship, BlackLoreOfZahar, CollegiateWizardry,
+	Diplomacy, Elementalism, Engineering, Familiar, Healing,
+	IllusionResistance, History, Loremastery, Engineering, Mapping, MysticAura,
+	Naturalism, QuietMagic, Prestidigitation, SensingPower, Transmogrification
+};
+static skill_s theif_skills[] = {
+	Acrobatics, Alertness,
+	BlindFighting, Bribery, CatBurglary, CombatReflexes, CombatTrickery,
+	Contortionism, Diplomacy,
+	FightingStyleDualWeapon, FightingStyleMissile, FightingStylePole, FightingStyleSigle, FightingStyleTwoHanded, FightingStyleWeaponAndShield,
+	Gambling, Intimidation, LipReading, Lockpicking, Mapping, PreciseShooting,
+	Riding, Running, Seafaring, Skirmishing, Skulking, Sniping, Swashbuckling,
+	TrapFinding, WeaponFinesse,
+	WeaponFocusSwords
+};
 
 static void print_ability(unsigned char* ability)
 {
@@ -68,7 +92,7 @@ void hero::choosegender(bool interactive)
 	gender = (gender_s)logs::input(interactive, false, "Выбрайте [пол]:");
 }
 
-void hero::chooseskills(bool interactive, skill_s* source, unsigned maximum, int count)
+void hero::chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count)
 {
 	while(count > 0)
 	{
@@ -78,29 +102,47 @@ void hero::chooseskills(bool interactive, skill_s* source, unsigned maximum, int
 			if(rang >= 3)
 				continue;
 			if(rang)
-				logs::add(source[i], "%1x%2i", getstr(source[i]), rang + 1);
+				logs::add(source[i], "%1 x%2i", getstr(source[i]), rang + 1);
 			else
 				logs::add(source[i], getstr(source[i]));
 		}
-		auto result = (skill_s)logs::input(interactive, true, "Выбирайте [навык] (осталось %1i)", count);
+		auto result = (skill_s)logs::input(interactive, true, "Выбирайте [%1 навык] (осталось %2i)", skill_name, count);
 		add(result, 1);
+		count--;
 	}
+}
+
+static void choose_class_general(hero* player, bool interactive, int count)
+{
+	player->chooseskills(interactive, "общий", general_skills, sizeof(general_skills) / sizeof(general_skills[0]), count);
 }
 
 static void choose_class_profiency(hero* player, bool interactive, int count)
 {
 	unsigned maximum = 0;
-	skill_s source = 0;
+	skill_s* source = 0;
 	switch(player->type)
 	{
 	case Cleric:
 		source = cleric_skills;
 		maximum = sizeof(cleric_skills) / sizeof(cleric_skills[0]);
 		break;
+	case Fighter:
+		source = fighter_skills;
+		maximum = sizeof(fighter_skills) / sizeof(fighter_skills[0]);
+		break;
+	case Mage:
+		source = mage_skills;
+		maximum = sizeof(mage_skills) / sizeof(mage_skills[0]);
+		break;
+	case Theif:
+		source = theif_skills;
+		maximum = sizeof(theif_skills) / sizeof(theif_skills[0]);
+		break;
 	default:
 		return;
 	}
-	player->chooseskills(interactive, source, maximum, count);
+	player->chooseskills(interactive, "классовый", source, maximum, count);
 }
 
 void hero::levelup(bool interactive)
@@ -110,8 +152,7 @@ void hero::levelup(bool interactive)
 	if(level == 1)
 	{
 		hp = getmaxhp();
-		auto general_ability_count = 1 + imax(0, getbonus(Intellegence));
-		chooseskills(interactive, general_skills, sizeof(general_skills) / sizeof(general_skills[0]), general_ability_count);
+		choose_class_general(this, interactive, 1 + imax(0, getbonus(Intellegence)));
 		choose_class_profiency(this, interactive, 1);
 	}
 	else
@@ -121,7 +162,7 @@ void hero::levelup(bool interactive)
 		case 5:
 		case 9:
 		case 13:
-			chooseskills(interactive, general_skills, sizeof(general_skills) / sizeof(general_skills[0]), 1);
+			choose_class_general(this, interactive, 1);
 			break;
 		}
 		if((level%getprogress()) == 0)

@@ -119,6 +119,12 @@ enum monster_s : unsigned char {
 	Ork, Zombie,
 	FirstMonster = Ork, LastMonster = Zombie,
 };
+struct item
+{
+	item_s				type;
+	bool				islight() const;
+	bool				istwohanded() const;
+};
 struct hero
 {
 	race_s				race;
@@ -132,7 +138,7 @@ struct hero
 	void				chooseability();
 	void				chooseclass(bool interactive);
 	void				choosegender(bool interactive);
-	void				chooseskills(bool interactive, skill_s* source, unsigned maximum, int count = 1);
+	void				chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count = 1);
 	void				clear();
 	static hero*		create(bool interactive);
 	int					get(ability_s id) const { return ability[id]; }
