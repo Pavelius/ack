@@ -121,6 +121,9 @@ enum monster_s : unsigned char {
 enum cost_s : unsigned {
 	CP = 1, SP = 10, GP = 100,
 };
+enum encounter_type_s {
+	Dungeon, DungeonLair, Wilderness, WildernessLair
+};
 struct item
 {
 	item_s				type;
@@ -144,7 +147,8 @@ struct creature
 	void				choosegender(bool interactive);
 	void				chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count = 1);
 	void				clear();
-	static creature*	create(bool interactive);
+	void				create(bool interactive, bool add_party = true);
+	void				create(monster_s type, bool interactive);
 	void				damage(int value, bool interactive);
 	int					get(ability_s id) const { return ability[id]; }
 	int					get(skill_s id) const { return proficiency[id]; }
@@ -186,7 +190,6 @@ namespace game
 	int*				getexperience(class_s type);
 	unsigned char*		getminimal(class_s id);
 	unsigned char		getmaximumlevel(class_s id);
+	dice				getmonstercount(monster_s id, encounter_type_s type);
 	ability_s			getprime(class_s id);
 }
-extern adat<creature, 260>	heroes;
-extern creature*			players[7];

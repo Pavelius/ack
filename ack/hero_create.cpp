@@ -167,17 +167,3 @@ void creature::levelup(bool interactive)
 			choose_class_profiency(this, interactive, 1);
 	}
 }
-
-creature* creature::create(bool interactive)
-{
-	auto p = heroes.add();
-	if(!p)
-		return 0;
-	p->clear();
-	p->chooseability();
-	p->choosegender(interactive);
-	p->chooseclass(interactive);
-	while(p->islevelup())
-		p->levelup(interactive);
-	return p;
-}

@@ -1,7 +1,7 @@
 #include "main.h"
 
 adat<creature, 260>		heroes;
-creature*				players[7];
+static creature*		players[7];
 
 static char ability_bonus[] = {-4,
 -4, -4, -3, -2, -2, -1, -1, -1, 0,
@@ -126,4 +126,16 @@ bool creature::islevelup() const
 		return false;
 	auto next_experience = game::getexperience(type)[level + 1];
 	return experince >= next_experience;
+}
+
+void creature::create(bool interactive, bool add_party)
+{
+	clear();
+	chooseability();
+	choosegender(interactive);
+	chooseclass(interactive);
+	while(islevelup())
+		levelup(interactive);
+	if(add_party)
+		zcat(players, this);
 }
