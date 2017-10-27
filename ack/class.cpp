@@ -25,6 +25,7 @@ static unsigned char mage_attack[15] = {11,
 static struct class_i
 {
 	const char*			name[2];
+	race_s				race;
 	ability_s			prime;
 	unsigned char		minimal[Charisma + 1];
 	int*				experience;
@@ -32,13 +33,18 @@ static struct class_i
 	unsigned char*		attack;
 	int					dice;
 } class_data[] = {
-	{{"Cleric", "Священник"}, Wisdow, {0, 0, 0, 0, 9, 0}, cleric_experience, 14, cleric_attack, 6},
-	{{"Fighter", "Воин"}, Strenght, {9, 0, 0, 0, 0, 0}, fighter_experience, 14, fighter_attack, 8},
-	{{"Mage", "Маг"}, Intellegence, {0, 0, 0, 9, 0, 0}, mage_experience, 14, mage_attack, 4},
-	{{"Theif", "Вор"}, Dexterity, {0, 9, 0, 0, 0, 0}, theif_experience, 14, cleric_attack, 4},
+	{{"Cleric", "Священник"}, Human, Wisdow, {0, 0, 0, 0, 9, 0}, cleric_experience, 14, cleric_attack, 6},
+	{{"Fighter", "Воин"}, Human, Strenght, {9, 0, 0, 0, 0, 0}, fighter_experience, 14, fighter_attack, 8},
+	{{"Mage", "Маг"}, Human, Intellegence, {0, 0, 0, 9, 0, 0}, mage_experience, 14, mage_attack, 4},
+	{{"Theif", "Вор"}, Human, Dexterity, {0, 9, 0, 0, 0, 0}, theif_experience, 14, cleric_attack, 4},
 };
 assert_enum(class, LastClass);
 getstr_enum(class);
+
+race_s game::getrace(class_s id)
+{
+	return class_data[id].race;
+}
 
 ability_s game::getprime(class_s id)
 {

@@ -8,51 +8,51 @@ static struct item_i
 		dice			two_hands;
 		int				ac;
 	};
-	const char*			name[2];
+	const char*			name[3];
 	int					cost;
 	combatinfo			combat;
 } item_data[] = {
 	{{"", ""}},
 	//
-	{{"Club", ""}, 1 * GP, {{1, 4}}},
-	{{"Flail", ""}, 5 * GP, {{1, 6}, {1, 8}}},
-	{{"Hammer", ""}, 5 * GP, {{1, 6}, {1, 8}}},
-	{{"Mace", ""}, 5 * GP, {{1, 6}, {1, 8}}},
-	{{"Spear", ""}, 3 * GP, {{1, 6}, {1, 8}}},
-	{{"Javelin", ""}, 1 * GP, {{1, 6}}},
-	{{"Staff", ""}, 1 * GP, {{0}, {1, 6}}},
-	{{"Axe", ""}, 7 * GP, {{1, 6}, {1, 8}}},
-	{{"Halberd", ""}, 10 * GP, {{0}, {1, 10}}},
-	{{"Dagger", ""}, 3 * GP, {{1, 4}}},
-	{{"Greatsword", ""}, 15 * GP, {{0}, {1, 10}}},
-	{{"Longsword", ""}, 10 * GP, {{1, 6}, {1, 8}}},
-	{{"Shortsword", ""}, 7 * GP, {{1, 6}}},
-	{{"Crossbow", ""}, 30 * GP, {{1, 6}}},
-	{{"Longbow", ""}, 7 * GP, {{1, 6}}},
-	{{"Shortbow", ""}, 3 * GP, {{1, 6}}},
-	{{"Dart", ""}, 2 * GP, {{1, 4}}},
-	{{"Sling", ""}, 2 * GP, {{1, 4}}},
+	{{"Club", "Дубина"}, 1 * GP, {{1, 4}}},
+	{{"Flail", "Цеп"}, 5 * GP, {{1, 6}, {1, 8}}},
+	{{"Hammer", "Молот"}, 5 * GP, {{1, 6}, {1, 8}}},
+	{{"Mace", "Булава"}, 5 * GP, {{1, 6}, {1, 8}}},
+	{{"Spear", "Копье"}, 3 * GP, {{1, 6}, {1, 8}}},
+	{{"Javelin", "Дротик"}, 1 * GP, {{1, 6}}},
+	{{"Staff", "Посох"}, 1 * GP, {{0}, {1, 6}}},
+	{{"Axe", "Топор"}, 7 * GP, {{1, 6}, {1, 8}}},
+	{{"Halberd", "Алебарда"}, 10 * GP, {{0}, {1, 10}}},
+	{{"Dagger", "Кинжал"}, 3 * GP, {{1, 4}}},
+	{{"Greatsword", "Двуручный меч"}, 15 * GP, {{0}, {1, 10}}},
+	{{"Longsword", "Меч"}, 10 * GP, {{1, 6}, {1, 8}}},
+	{{"Shortsword", "Короткий меч"}, 7 * GP, {{1, 6}}},
+	{{"Crossbow", "Арбалет"}, 30 * GP, {{1, 6}}},
+	{{"Longbow", "Лук"}, 7 * GP, {{1, 6}}},
+	{{"Shortbow", "Короткий лук"}, 3 * GP, {{1, 6}}},
+	{{"Dart", "Дротик"}, 2 * GP, {{1, 4}}},
+	{{"Sling", "Пращя"}, 2 * GP, {{1, 4}}},
 	//
-	{{"Stone", ""}, 0},
-	{{"Arrow", ""}, 5 * CP},
-	{{"Bolt", ""}, 1 * SP},
+	{{"Stone", "Камень"}, 0},
+	{{"Arrow", "Стрела"}, 5 * CP},
+	{{"Bolt", "Болт"}, 1 * SP},
 	// Items (armor)
-	{{"Hide armor", ""}, 10 * GP, {{},{}, 1}},
-	{{"Leather armor", ""}, 20 * GP, {{}, {}, 2}},
-	{{"Ring mail", ""}, 30 * GP, {{}, {}, 3}},
-	{{"Scale mail", ""}, 30 * GP, {{}, {}, 3}},
-	{{"Chain mail", ""}, 40 * GP, {{}, {}, 4}},
-	{{"Banded mail", ""}, 50 * GP, {{}, {}, 5}},
-	{{"Plate mail", ""}, 60 * GP, {{}, {}, 6}},
+	{{"Hide armor", "Меховая броня"}, 10 * GP, {{},{}, 1}},
+	{{"Leather armor", "Кожанная броня"}, 20 * GP, {{}, {}, 2}},
+	{{"Ring mail", "Кольчужная рубашка"}, 30 * GP, {{}, {}, 3}},
+	{{"Scale mail", "Чешуйчатый доспех"}, 30 * GP, {{}, {}, 3}},
+	{{"Chain mail", "Кольчуга"}, 40 * GP, {{}, {}, 4}},
+	{{"Banded mail", "Кольцевой доспех"}, 50 * GP, {{}, {}, 5}},
+	{{"Plate mail", "Латы"}, 60 * GP, {{}, {}, 6}},
 	//
-	{{"Shield", ""}, 10 * GP, {{}, {}, 1}},
-	{{"Helmet", ""}},
-	{{"Bracers", ""}},
+	{{"Shield", "Щит"}, 10 * GP, {{}, {}, 1}},
+	{{"Helmet", "Шлем"}},
+	{{"Bracers", "Наручи"}},
 	// Items (other)
-	{{"Ration", ""}},
-	{{"Apple", ""}},
+	{{"Ration", "Паек"}},
+	{{"Apple", "Яблоко"}},
 	//
-	{{"Silver coins", ""}},
+	{{"Silver coins", "Серебрянная монета"}},
 };
 assert_enum(item, LastItem);
 getstr_enum(item);
@@ -68,6 +68,11 @@ const dice& item::getdamage(bool two_handed) const
 		return item_data[type].combat.two_hands;
 	else
 		return item_data[type].combat.one_hand;
+}
+
+const char* item::getname() const
+{
+	return item_data[type].name[1];
 }
 
 bool item::islight() const

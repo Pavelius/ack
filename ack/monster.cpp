@@ -18,7 +18,7 @@ static struct monster_i
 assert_enum(monster, Zombie);
 getstr_enum(monster);
 
-void creature::create(monster_s monster_type, bool interactive)
+void creature::create(monster_s monster_type)
 {
 	auto& m = monster_data[monster_type];
 	race = m.race;

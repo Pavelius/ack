@@ -130,6 +130,7 @@ struct item
 	operator bool() const { return type != NoItem; }
 	int					getarmor() const;
 	const dice&			getdamage(bool two_handed) const;
+	const char*			getname() const;
 	bool				islight() const;
 	bool				istwohanded() const;
 };
@@ -137,9 +138,16 @@ struct damageinfo
 {
 	int					difficult;
 	dice				damage;
+	item*				weapon;
 };
 struct creature
 {
+	race_s				race;
+	gender_s			gender;
+	class_s				type;
+	alignment_s			alignment;
+	unsigned char		level;
+	//
 	void				add(skill_s id, int value) { proficiency[id] += value; }
 	bool				attack(creature* enemy, bool interactive, int bonus = 0, bool flat_footed = false, wear_s weapon = MeleeWeapon);
 	void				chooseability();
@@ -147,8 +155,8 @@ struct creature
 	void				choosegender(bool interactive);
 	void				chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count = 1);
 	void				clear();
-	void				create(bool interactive, bool add_party = true);
-	void				create(monster_s type, bool interactive);
+	void				create(bool interactive, bool add_party);
+	void				create(monster_s type);
 	void				damage(int value, bool interactive);
 	int					get(ability_s id) const { return ability[id]; }
 	int					get(skill_s id) const { return proficiency[id]; }
@@ -163,19 +171,15 @@ struct creature
 	int					getmaxhp() const;
 	int					getprepared(skill_s id) const { return spell_prepared[id]; }
 	int					getprogress() const { return 4; }
+	bool				isactive() const { return hp > 0; }
 	bool				islevelup() const;
 	bool				isplayer() const;
 	void				levelup(bool interactive);
 	int					roll(skill_s value) const;
 	void				setprepared(skill_s id, int value) { spell_prepared[id] = (unsigned char)value; }
 private:
-	race_s				race;
-	gender_s			gender;
-	class_s				type;
-	alignment_s			alignment;
-	char				level;
-	int					experince;
 	short				hp, mhp;
+	int					experince;
 	item				wear[LastWear+1];
 	unsigned char		ability[Charisma + 1];
 	unsigned char		proficiency[LastSkill + 1];
@@ -184,6 +188,7 @@ private:
 };
 namespace game
 {
+	void				addparty(creature** parcipants);
 	void				encounter(monster_s type);
 	unsigned char*		getattack(class_s id);
 	int					getdice(class_s id);
@@ -192,4 +197,6 @@ namespace game
 	unsigned char		getmaximumlevel(class_s id);
 	dice				getmonstercount(monster_s id, encounter_type_s type);
 	ability_s			getprime(class_s id);
+	race_s				getrace(class_s id);
 }
+extern creature*		players[7];

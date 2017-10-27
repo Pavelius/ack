@@ -1,7 +1,7 @@
 #include "main.h"
 
 adat<creature, 260>		heroes;
-static creature*		players[7];
+creature*				players[7];
 
 static char ability_bonus[] = {-4,
 -4, -4, -3, -2, -2, -1, -1, -1, 0,
@@ -95,14 +95,15 @@ bool creature::attack(creature* enemy, bool interactive, int bonus, bool flat_fo
 
 bool creature::getattack(damageinfo& result, wear_s slot) const
 {
-	result.difficult = game::getattack(type)[imin((char)14, level)];
+	result.difficult = game::getattack(type)[imin((unsigned char)14, level)];
 	result.damage = dice::create(1, 2);
 	if(wear[slot])
 	{
 		bool two_handed = false;
 		if(slot == MeleeWeapon && !wear[SecondanaryWeapon])
 			two_handed = true;
-		result.damage = wear[slot].getdamage(two_handed);
+		result.weapon = (item*)(wear + slot);
+		result.damage = result.weapon->getdamage(two_handed);
 	}
 	if(slot == MeleeWeapon || slot == SecondanaryWeapon)
 	{
@@ -134,6 +135,7 @@ void creature::create(bool interactive, bool add_party)
 	chooseability();
 	choosegender(interactive);
 	chooseclass(interactive);
+	this->race = game::getrace(type);
 	while(islevelup())
 		levelup(interactive);
 	if(add_party)
