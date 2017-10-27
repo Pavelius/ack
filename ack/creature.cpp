@@ -1,30 +1,33 @@
 #include "main.h"
 
+adat<creature, 260>		heroes;
+creature*				players[7];
+
 static char ability_bonus[] = {-4,
 -4, -4, -3, -2, -2, -1, -1, -1, 0,
 0, 0, 0, 1, 1, 1, 2, 2, 3};
 
-void hero::clear()
+void creature::clear()
 {
 	memset(this, 0, sizeof(*this));
 }
 
-const char* hero::getname() const
+const char* creature::getname() const
 {
 	return "";
 }
 
-int	hero::getbonus(ability_s id) const
+int	creature::getbonus(ability_s id) const
 {
 	return maptbl(ability_bonus, (int)ability[id]);
 }
 
-int hero::getmaxhp() const
+int creature::getmaxhp() const
 {
 	return imin((int)level, mhp + getbonus(Constitution));
 }
 
-int	hero::getarmor(bool flatfooted) const
+int	creature::getarmor(bool flatfooted) const
 {
 	auto result = wear[Torso].getarmor();
 	result += wear[Head].getarmor();
@@ -38,39 +41,26 @@ int	hero::getarmor(bool flatfooted) const
 	return result;
 }
 
-int hero::getinitiative() const
+int creature::getinitiative() const
 {
 	auto result = getbonus(Dexterity);
 	return result;
 }
 
-static int base_attack(attack_progress_s type, int level)
-{
-	if(!level)
-		return 11;
-	switch(type)
-	{
-	case AsFighter: return 10 - ((level - 1) * 2) / 3;
-	case AsCleric: return 10 - (level - 1) / 2;
-	default: return 10 - (level - 1) / 3;
-	}
-	return 10;
-}
-
-int hero::getdifficult(skill_s value) const
+int creature::getdifficult(skill_s value) const
 {
 	auto rang = get(value);
 	if(!rang)
 		return 30;
-	return 21 - get(value)*4;
+	return 21 - get(value) * 4;
 }
 
-int hero::roll(skill_s value) const
+int creature::roll(skill_s value) const
 {
 	return 0;
 }
 
-void hero::damage(int value, bool interactive)
+void creature::damage(int value, bool interactive)
 {
 	if(interactive)
 		logs::add("%1 получил%2 %3i повреждений", getname(), getA(), value);
@@ -83,7 +73,7 @@ void hero::damage(int value, bool interactive)
 	logs::add(".");
 }
 
-bool hero::attack(hero* enemy, bool interactive, int bonus, bool flat_footed, wear_s weapon)
+bool creature::attack(creature* enemy, bool interactive, int bonus, bool flat_footed, wear_s weapon)
 {
 	damageinfo di;
 	if(!getattack(di, weapon))
@@ -103,9 +93,9 @@ bool hero::attack(hero* enemy, bool interactive, int bonus, bool flat_footed, we
 	return true;
 }
 
-bool hero::getattack(damageinfo& result, wear_s slot) const
+bool creature::getattack(damageinfo& result, wear_s slot) const
 {
-	result.difficult = base_attack(game::getattack(type), level);
+	result.difficult = game::getattack(type)[imin((char)14, level)];
 	result.damage = dice::create(1, 2);
 	if(wear[slot])
 	{
@@ -122,4 +112,18 @@ bool hero::getattack(damageinfo& result, wear_s slot) const
 	else if(slot == RangedWeapon)
 		result.difficult -= getbonus(Dexterity);
 	return true;
+}
+
+bool creature::isplayer() const
+{
+	return zchr(players, (creature*)this) != 0;
+}
+
+bool creature::islevelup() const
+{
+	auto max_level = game::getmaximumlevel(type);
+	if(level >= max_level)
+		return false;
+	auto next_experience = game::getexperience(type)[level + 1];
+	return experince >= next_experience;
 }

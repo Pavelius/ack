@@ -1,7 +1,5 @@
 #include "main.h"
 
-adat<hero, 260>		heroes;
-
 static skill_s general_skills[] = {
 	Alchemy, AnimalHusbandry, AnimalTraining, Bargaining, Caving,
 	CollegiateWizardry, Diplomacy, Disguise, Endurance,
@@ -53,7 +51,7 @@ static void print_ability(unsigned char* ability)
 	}
 }
 
-void hero::chooseability()
+void creature::chooseability()
 {
 	for(auto i = Strenght; i <= Charisma; i = (ability_s)(i + 1))
 		ability[i] = (rand() % 6) + (rand() % 6) + (rand() % 6) + 3;
@@ -69,7 +67,7 @@ static bool match_minimal(unsigned char* ability, unsigned char* minimal)
 	return true;
 }
 
-void hero::chooseclass(bool interactive)
+void creature::chooseclass(bool interactive)
 {
 	logs::add("Ваши способности: ");
 	print_ability(ability);
@@ -84,7 +82,7 @@ void hero::chooseclass(bool interactive)
 	type = (class_s)logs::input(interactive, false, "Выбрайте [класс]:");
 }
 
-void hero::choosegender(bool interactive)
+void creature::choosegender(bool interactive)
 {
 	logs::add(Male, "Мужчина");
 	logs::add(Female, "Женщина");
@@ -92,7 +90,7 @@ void hero::choosegender(bool interactive)
 	gender = (gender_s)logs::input(interactive, false, "Выбрайте [пол]:");
 }
 
-void hero::chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count)
+void creature::chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count)
 {
 	while(count > 0)
 	{
@@ -112,16 +110,16 @@ void hero::chooseskills(bool interactive, const char* skill_name, skill_s* sourc
 	}
 }
 
-static void choose_class_general(hero* player, bool interactive, int count)
+static void choose_class_general(creature* player, bool interactive, int count)
 {
 	player->chooseskills(interactive, "общий", general_skills, sizeof(general_skills) / sizeof(general_skills[0]), count);
 }
 
-static void choose_class_profiency(hero* player, bool interactive, int count)
+static void choose_class_profiency(creature* player, bool interactive, int count)
 {
 	unsigned maximum = 0;
 	skill_s* source = 0;
-	switch(player->type)
+	switch(player->getclass())
 	{
 	case Cleric:
 		source = cleric_skills;
@@ -145,7 +143,7 @@ static void choose_class_profiency(hero* player, bool interactive, int count)
 	player->chooseskills(interactive, "классовый", source, maximum, count);
 }
 
-void hero::levelup(bool interactive)
+void creature::levelup(bool interactive)
 {
 	level++;
 	mhp += xrand(1, game::getdice(type));
@@ -170,7 +168,7 @@ void hero::levelup(bool interactive)
 	}
 }
 
-hero* hero::create(bool interactive)
+creature* creature::create(bool interactive)
 {
 	auto p = heroes.add();
 	if(!p)
@@ -179,6 +177,7 @@ hero* hero::create(bool interactive)
 	p->chooseability();
 	p->choosegender(interactive);
 	p->chooseclass(interactive);
-	p->levelup(interactive);
+	while(p->islevelup())
+		p->levelup(interactive);
 	return p;
 }

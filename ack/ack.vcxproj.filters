@@ -134,12 +134,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
-    <ClCompile Include="print.cpp">
-      <Filter>Логика</Filter>
-    </ClCompile>
-    <ClCompile Include="hero.cpp">
-      <Filter>Логика</Filter>
-    </ClCompile>
     <ClCompile Include="hero_create.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
@@ -163,6 +157,12 @@
     </ClCompile>
     <ClCompile Include="dice.cpp">
       <Filter>Библиотека</Filter>
+    </ClCompile>
+    <ClCompile Include="monster.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="creature.cpp">
+      <Filter>Логика</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

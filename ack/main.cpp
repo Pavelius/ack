@@ -3,8 +3,8 @@
 int	main(int argc, char *argv[])
 {
 	logs::open("ACK");
-	auto hero_size = sizeof(hero);
-	auto p = hero::create(true);
+	auto hero_size = sizeof(creature);
+	auto p = creature::create(true);
 	return 0;
 }
 

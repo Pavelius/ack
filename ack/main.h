@@ -121,9 +121,6 @@ enum monster_s : unsigned char {
 enum cost_s : unsigned {
 	CP = 1, SP = 10, GP = 100,
 };
-enum attack_progress_s : unsigned char {
-	AsFighter, AsCleric, AsMage,
-};
 struct item
 {
 	item_s				type;
@@ -138,23 +135,16 @@ struct damageinfo
 	int					difficult;
 	dice				damage;
 };
-struct hero
+struct creature
 {
-	race_s				race;
-	gender_s			gender;
-	class_s				type;
-	char				level;
-	alignment_s			alignment;
-	short				hp;
-	//
 	void				add(skill_s id, int value) { proficiency[id] += value; }
-	bool				attack(hero* enemy, bool interactive, int bonus = 0, bool flat_footed = false, wear_s weapon = MeleeWeapon);
+	bool				attack(creature* enemy, bool interactive, int bonus = 0, bool flat_footed = false, wear_s weapon = MeleeWeapon);
 	void				chooseability();
 	void				chooseclass(bool interactive);
 	void				choosegender(bool interactive);
 	void				chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count = 1);
 	void				clear();
-	static hero*		create(bool interactive);
+	static creature*	create(bool interactive);
 	void				damage(int value, bool interactive);
 	int					get(ability_s id) const { return ability[id]; }
 	int					get(skill_s id) const { return proficiency[id]; }
@@ -162,17 +152,26 @@ struct hero
 	int					getarmor(bool flatfooted = false) const;
 	bool				getattack(damageinfo& result, wear_s slot) const;
 	int					getbonus(ability_s id) const;
+	class_s				getclass() const { return type; }
 	int					getdifficult(skill_s value) const;
 	int					getinitiative() const;
 	const char*			getname() const;
 	int					getmaxhp() const;
 	int					getprepared(skill_s id) const { return spell_prepared[id]; }
 	int					getprogress() const { return 4; }
+	bool				islevelup() const;
+	bool				isplayer() const;
 	void				levelup(bool interactive);
 	int					roll(skill_s value) const;
 	void				setprepared(skill_s id, int value) { spell_prepared[id] = (unsigned char)value; }
 private:
-	short				mhp;
+	race_s				race;
+	gender_s			gender;
+	class_s				type;
+	alignment_s			alignment;
+	char				level;
+	int					experince;
+	short				hp, mhp;
 	item				wear[LastWear+1];
 	unsigned char		ability[Charisma + 1];
 	unsigned char		proficiency[LastSkill + 1];
@@ -181,9 +180,13 @@ private:
 };
 namespace game
 {
-	attack_progress_s	getattack(class_s id);
+	void				encounter(monster_s type);
+	unsigned char*		getattack(class_s id);
 	int					getdice(class_s id);
+	int*				getexperience(class_s type);
 	unsigned char*		getminimal(class_s id);
+	unsigned char		getmaximumlevel(class_s id);
 	ability_s			getprime(class_s id);
 }
-extern adat<hero, 260>	heroes;
+extern adat<creature, 260>	heroes;
+extern creature*			players[7];

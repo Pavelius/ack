@@ -149,15 +149,15 @@
     <ClCompile Include="draw_input.cpp" />
     <ClCompile Include="draw_text.cpp" />
     <ClCompile Include="draw_textf.cpp" />
-    <ClCompile Include="hero.cpp" />
+    <ClCompile Include="creature.cpp" />
     <ClCompile Include="hero_create.cpp" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="logs.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="monster.cpp" />
     <ClCompile Include="pma.cpp" />
     <ClCompile Include="point.cpp" />
-    <ClCompile Include="print.cpp" />
     <ClCompile Include="race.cpp" />
     <ClCompile Include="skill.cpp" />
     <ClCompile Include="sprite.cpp" />
