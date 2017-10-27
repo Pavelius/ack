@@ -55,6 +55,9 @@
     <ClInclude Include="logs.h">
       <Filter>Текстовый процессор</Filter>
     </ClInclude>
+    <ClInclude Include="dice.h">
+      <Filter>Библиотека</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Библиотека">
@@ -154,6 +157,12 @@
     </ClCompile>
     <ClCompile Include="item.cpp">
       <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="combat.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="dice.cpp">
+      <Filter>Библиотека</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

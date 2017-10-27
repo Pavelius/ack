@@ -1,5 +1,6 @@
 #include "adat.h"
 #include "crt.h"
+#include "dice.h"
 #include "logs.h"
 
 #pragma once
@@ -82,12 +83,10 @@ enum item_s : unsigned char {
 	Crossbow, BowLong, BowShort, Dart, Sling,
 	Stone, Arrow, Bolt,
 	// Items (armor)
-	PaddedArmour, LeatherArmour, StuddedLeatherArmour,
-	HideArmour, ChainShirt, ScaleMail, BreastPlate, HalfPlate,
-	RingMail, ChainMail, SplintMail, PlateMail,
+	HideArmour, LeatherArmour, RingMail, ScaleMail, ChainMail, BandedMail, PlateMail,
 	Shield, Helmet, Bracers,
 	// Items (other)
-	Ration, Apple, BreadHalflings, BreadEvlen, BreadDwarven, Cake, Sausage, Meat,
+	Ration, Apple,
 	Coin,
 	FirstItem = Club, LastItem = Coin,
 };
@@ -95,7 +94,7 @@ enum wear_s : unsigned char {
 	// Body locations
 	MeleeWeapon, SecondanaryWeapon, RangedWeapon,
 	Head, Neck, Torso, Amunitions, RightFinger, LeftFinger, Elbows, Legs,
-	FirstWear = MeleeWeapon, LastBodyLocation = Legs
+	FirstWear = MeleeWeapon, LastWear = Legs
 };
 enum size_s : unsigned char {
 	SizeTiny, SizeSmall, SizeMedium, SizeLarge, SizeHuge
@@ -119,11 +118,25 @@ enum monster_s : unsigned char {
 	Ork, Zombie,
 	FirstMonster = Ork, LastMonster = Zombie,
 };
+enum cost_s : unsigned {
+	CP = 1, SP = 10, GP = 100,
+};
+enum attack_progress_s : unsigned char {
+	AsFighter, AsCleric, AsMage,
+};
 struct item
 {
 	item_s				type;
+	operator bool() const { return type != NoItem; }
+	int					getarmor() const;
+	const dice&			getdamage(bool two_handed) const;
 	bool				islight() const;
 	bool				istwohanded() const;
+};
+struct damageinfo
+{
+	int					difficult;
+	dice				damage;
 };
 struct hero
 {
@@ -135,23 +148,32 @@ struct hero
 	short				hp;
 	//
 	void				add(skill_s id, int value) { proficiency[id] += value; }
+	bool				attack(hero* enemy, bool interactive, int bonus = 0, bool flat_footed = false, wear_s weapon = MeleeWeapon);
 	void				chooseability();
 	void				chooseclass(bool interactive);
 	void				choosegender(bool interactive);
 	void				chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count = 1);
 	void				clear();
 	static hero*		create(bool interactive);
+	void				damage(int value, bool interactive);
 	int					get(ability_s id) const { return ability[id]; }
 	int					get(skill_s id) const { return proficiency[id]; }
+	const char*			getA() const { return (gender==Female) ? "à" : ""; }
+	int					getarmor(bool flatfooted = false) const;
+	bool				getattack(damageinfo& result, wear_s slot) const;
 	int					getbonus(ability_s id) const;
+	int					getdifficult(skill_s value) const;
+	int					getinitiative() const;
 	const char*			getname() const;
 	int					getmaxhp() const;
 	int					getprepared(skill_s id) const { return spell_prepared[id]; }
 	int					getprogress() const { return 4; }
 	void				levelup(bool interactive);
+	int					roll(skill_s value) const;
 	void				setprepared(skill_s id, int value) { spell_prepared[id] = (unsigned char)value; }
 private:
 	short				mhp;
+	item				wear[LastWear+1];
 	unsigned char		ability[Charisma + 1];
 	unsigned char		proficiency[LastSkill + 1];
 	unsigned char		spell_prepared[LastSkill + 1];
@@ -159,6 +181,7 @@ private:
 };
 namespace game
 {
+	attack_progress_s	getattack(class_s id);
 	int					getdice(class_s id);
 	unsigned char*		getminimal(class_s id);
 	ability_s			getprime(class_s id);

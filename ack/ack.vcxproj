@@ -120,6 +120,7 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="crt.h" />
+    <ClInclude Include="dice.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="logs.h" />
@@ -139,9 +140,11 @@
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="class.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="combat.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="crt.cpp" />
     <ClCompile Include="crt_parse.cpp" />
+    <ClCompile Include="dice.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_input.cpp" />
     <ClCompile Include="draw_text.cpp" />
