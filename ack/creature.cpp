@@ -14,7 +14,7 @@ void creature::clear()
 
 const char* creature::getname() const
 {
-	return game::getname(name);
+	return name;
 }
 
 int	creature::getbonus(ability_s id) const
@@ -140,7 +140,7 @@ void creature::create(bool interactive, bool add_party)
 		levelup(interactive);
 	if(add_party)
 	{
-		name = game::getrandomname(race, gender);
+		name = game::getname(game::getrandomname(race, gender));
 		zcat(players, this);
 	}
 }

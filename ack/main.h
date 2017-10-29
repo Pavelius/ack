@@ -184,7 +184,7 @@ private:
 	unsigned char		ability[Charisma + 1];
 	unsigned char		proficiency[LastSkill + 1];
 	unsigned char		spell_prepared[LastSkill + 1];
-	unsigned char		name;
+	const char*			name;
 };
 namespace game
 {

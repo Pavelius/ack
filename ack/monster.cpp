@@ -28,6 +28,7 @@ void creature::create(monster_s monster_type)
 	level = m.level;
 	memcpy(ability, m.ability, sizeof(ability));
 	hp = dice::roll(level, 8);
+	name = m.name[1];
 }
 
 dice game::getmonstercount(monster_s id, encounter_type_s type)

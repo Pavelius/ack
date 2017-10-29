@@ -60,6 +60,7 @@ static void make_actions(combatant* parcipant, combatant* enemy, bool interactiv
 			logs::add(ActionMeleeAttack, "Броситься на врага, используя [%1]", di.weapon->getname());
 	}
 	auto id = logs::input(interactive, false, "Что будет делать [%1]?", player->getname());
+	logs::add("\n");
 	switch(id)
 	{
 	case ActionMeleeAttack:
@@ -119,7 +120,6 @@ void game::encounter(monster_s type)
 	logs::add("Внезапно показались %1i %2.", count, getstr(type));
 	while(true)
 	{
-		logs::add("\n");
 		if(!combat_round(combatants))
 			break;
 		logs::next();

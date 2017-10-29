@@ -234,9 +234,9 @@ static void correct(char* p)
 	bool need_uppercase = true;
 	for(; *p; p++)
 	{
-		if(*p == '.' || *p == '?' || *p == '!')
+		if(*p == '.' || *p == '?' || *p == '!' || *p=='\n')
 		{
-			p = (char*)zskipsp(p + 1);
+			p = (char*)zskipspcr(p + 1);
 			if(*p != '-')
 				need_uppercase = true;
 		}
