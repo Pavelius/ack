@@ -63,8 +63,10 @@ static void make_actions(combatant* parcipant, combatant* enemy, bool interactiv
 	switch(id)
 	{
 	case ActionMeleeAttack:
+		player->attack(enemy->object, true);
 		break;
 	case ActionRangeAttack:
+		player->attack(enemy->object, true, 0, false, RangedWeapon);
 		break;
 	}
 }
@@ -73,14 +75,24 @@ static combatant* getenemy(combatant* parcipants, int side)
 {
 }
 
-static void combat_round(combatant* parcipants)
+static bool combat_round(combatant* parcipants)
 {
 	for(auto p = parcipants; *p; p++)
 	{
 		if(!p->isactive())
 			continue;
-		make_actions(p, 0, p->isplayer());
+		combatant* enemies[32]; enemies[0] = 0;
+		for(auto pe = parcipants; *pe; pe++)
+		{
+			if(!pe->isactive() || p->side==pe->side)
+				continue;
+			zcat(enemies, pe);
+		}
+		if(!enemies[0])
+			return false;
+		make_actions(p, enemies[0], p->isplayer());
 	}
+	return true;
 }
 
 void game::encounter(monster_s type)
@@ -105,5 +117,12 @@ void game::encounter(monster_s type)
 	}
 	roll_initiative(combatants);
 	logs::add("Внезапно показались %1i %2.", count, getstr(type));
-	combat_round(combatants);
+	while(true)
+	{
+		logs::add("\n");
+		if(!combat_round(combatants))
+			break;
+		logs::next();
+	}
+	logs::next();
 }

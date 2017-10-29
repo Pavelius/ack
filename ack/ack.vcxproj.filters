@@ -164,5 +164,8 @@
     <ClCompile Include="creature.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
+    <ClCompile Include="names.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

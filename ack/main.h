@@ -196,7 +196,9 @@ namespace game
 	unsigned char*		getminimal(class_s id);
 	unsigned char		getmaximumlevel(class_s id);
 	dice				getmonstercount(monster_s id, encounter_type_s type);
+	const char*			getname(unsigned char index);
 	ability_s			getprime(class_s id);
 	race_s				getrace(class_s id);
+	unsigned char		getrandomname(race_s race, gender_s gender);
 }
 extern creature*		players[7];

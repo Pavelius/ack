@@ -14,7 +14,7 @@ void creature::clear()
 
 const char* creature::getname() const
 {
-	return "";
+	return game::getname(name);
 }
 
 int	creature::getbonus(ability_s id) const
@@ -84,11 +84,11 @@ bool creature::attack(creature* enemy, bool interactive, int bonus, bool flat_fo
 	if(result < di.difficult)
 	{
 		if(interactive)
-			logs::add("%1 промазал%2", getname(), getA());
+			logs::add("%1 промазал%2.", getname(), getA());
 		return true;
 	}
 	if(interactive)
-		logs::add("%1 попал%2", getname(), getA());
+		logs::add("%1 попал%2.", getname(), getA());
 	enemy->damage(imin(1, di.damage.roll()), interactive);
 	return true;
 }
@@ -139,5 +139,8 @@ void creature::create(bool interactive, bool add_party)
 	while(islevelup())
 		levelup(interactive);
 	if(add_party)
+	{
+		name = game::getrandomname(race, gender);
 		zcat(players, this);
+	}
 }
