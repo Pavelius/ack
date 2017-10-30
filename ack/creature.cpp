@@ -24,7 +24,10 @@ int	creature::getbonus(ability_s id) const
 
 int creature::getmaxhp() const
 {
-	return imin((int)level, mhp + getbonus(Constitution));
+	auto result = mhp + getbonus(Constitution);
+	if(result < level)
+		result = level;
+	return result;
 }
 
 int	creature::getarmor(bool flatfooted) const
@@ -80,6 +83,8 @@ bool creature::attack(creature* enemy, bool interactive, int bonus, bool flat_fo
 		return false;
 	di.difficult += enemy->getarmor(flat_footed);
 	di.difficult -= bonus;
+	if(flat_footed)
+		di.difficult += 4;
 	auto result = d20();
 	if(result < di.difficult)
 	{
@@ -89,12 +94,16 @@ bool creature::attack(creature* enemy, bool interactive, int bonus, bool flat_fo
 	}
 	if(interactive)
 		logs::add("%1 попал%2.", getname(), getA());
-	enemy->damage(imin(1, di.damage.roll()), interactive);
+	auto damage = di.damage.roll();
+	if(damage < 0)
+		damage = 1;
+	enemy->damage(damage, interactive);
 	return true;
 }
 
 bool creature::getattack(damageinfo& result, wear_s slot) const
 {
+	memset(&result, 0, sizeof(result));
 	result.difficult = game::getattack(type)[imin((unsigned char)14, level)];
 	result.damage = dice::create(1, 2);
 	if(wear[slot])
@@ -132,10 +141,11 @@ bool creature::islevelup() const
 void creature::create(bool interactive, bool add_party)
 {
 	clear();
+	this->race = game::getrace(type);
 	chooseability();
 	choosegender(interactive);
 	chooseclass(interactive);
-	this->race = game::getrace(type);
+	chooseequipment(interactive);
 	while(islevelup())
 		levelup(interactive);
 	if(add_party)

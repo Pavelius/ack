@@ -127,7 +127,10 @@ enum encounter_type_s {
 struct item
 {
 	item_s				type;
+	item() : type(NoItem) {}
+	item(item_s type) : type(type) {}
 	operator bool() const { return type != NoItem; }
+	//
 	int					getarmor() const;
 	const dice&			getdamage(bool two_handed) const;
 	const char*			getname() const;
@@ -152,6 +155,7 @@ struct creature
 	bool				attack(creature* enemy, bool interactive, int bonus = 0, bool flat_footed = false, wear_s weapon = MeleeWeapon);
 	void				chooseability();
 	void				chooseclass(bool interactive);
+	void				chooseequipment(bool interactive);
 	void				choosegender(bool interactive);
 	void				chooseskills(bool interactive, const char* skill_name, skill_s* source, unsigned maximum, int count = 1);
 	void				clear();
@@ -200,5 +204,6 @@ namespace game
 	ability_s			getprime(class_s id);
 	race_s				getrace(class_s id);
 	unsigned char		getrandomname(race_s race, gender_s gender);
+	bool				isgameover();
 }
 extern creature*		players[7];

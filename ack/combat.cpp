@@ -1,18 +1,23 @@
 #include "main.h"
 
+const unsigned combatant_max = 32;
+
 enum combat_side_s {
 	PartySide, EnemySide,
 };
-
+enum combat_state_s {
+	ReadyToFight, FlatFooted,
+};
 enum combat_action_s {
 	ActionMeleeAttack, ActionRangeAttack,
 };
 
-struct combatant
+static struct combatant
 {
 	creature*		object;
 	char			initiative;
 	combat_side_s	side;
+	combat_state_s	state;
 
 	operator bool() const { return object != 0; }
 	
@@ -24,6 +29,11 @@ struct combatant
 	bool isplayer() const
 	{
 		return object->isplayer();
+	}
+
+	bool isflatfooted() const
+	{
+		return state == FlatFooted;
 	}
 
 	const char* getname() const
@@ -38,7 +48,7 @@ struct combatant
 		return e2->initiative - e1->initiative;
 	}
 
-};
+} combatants[combatant_max + 8];;
 
 static void roll_initiative(combatant* parcipants)
 {
@@ -55,9 +65,9 @@ static void make_actions(combatant* parcipant, combatant* enemy, bool interactiv
 	if(player->getattack(di, MeleeWeapon))
 	{
 		if(di.weapon)
-			logs::add(ActionMeleeAttack, "Броситься на врага давя его голыми руками");
-		else
 			logs::add(ActionMeleeAttack, "Броситься на врага, используя [%1]", di.weapon->getname());
+		else
+			logs::add(ActionMeleeAttack, "Броситься на врага давя его голыми руками");
 	}
 	auto id = logs::input(interactive, false, "Что будет делать [%1]?", player->getname());
 	logs::add("\n");
@@ -67,7 +77,7 @@ static void make_actions(combatant* parcipant, combatant* enemy, bool interactiv
 		player->attack(enemy->object, true);
 		break;
 	case ActionRangeAttack:
-		player->attack(enemy->object, true, 0, false, RangedWeapon);
+		player->attack(enemy->object, true, 0, enemy->isflatfooted(), RangedWeapon);
 		break;
 	}
 }
@@ -82,7 +92,8 @@ static bool combat_round(combatant* parcipants)
 	{
 		if(!p->isactive())
 			continue;
-		combatant* enemies[32]; enemies[0] = 0;
+		// Получим список врагов
+		combatant* enemies[combatant_max]; enemies[0] = 0;
 		for(auto pe = parcipants; *pe; pe++)
 		{
 			if(!pe->isactive() || p->side==pe->side)
@@ -91,15 +102,29 @@ static bool combat_round(combatant* parcipants)
 		}
 		if(!enemies[0])
 			return false;
+		// Выполним действие по конкретному врагу
 		make_actions(p, enemies[0], p->isplayer());
 	}
 	return true;
 }
 
+bool game::isgameover()
+{
+	for(auto p : players)
+	{
+		if(!p || !p->isactive())
+			continue;
+		return false;
+	}
+	logs::add("Все игроки мертвы. Игра окончена.");
+	return true;
+}
+
 void game::encounter(monster_s type)
 {
-	creature enemies[32]; memset(enemies, 0, sizeof(enemies));
-	combatant combatants[40]; memset(combatants, 0, sizeof(combatants));
+	creature enemies[combatant_max];
+	memset(enemies, 0, sizeof(enemies));
+	memset(combatants, 0, sizeof(combatants));
 	auto dice = game::getmonstercount(type, Dungeon);
 	auto count = dice.roll();
 	for(int i = 0; i < count; i++)
@@ -124,5 +149,7 @@ void game::encounter(monster_s type)
 			break;
 		logs::next();
 	}
+	if(!isgameover())
+		logs::add("Все враги мертвы.");
 	logs::next();
 }

@@ -7,6 +7,7 @@ struct names
 	const char*	name[2];
 };
 static names objects[] = {
+	{Human, Male, {"", ""}},
 	{Human, Male, {"Hawke","Хавки"}},
 	{Human, Male, {"Rudiger","Рудигер"}},
 	{Human, Male, {"Gregor","Грегор"}},
@@ -67,7 +68,7 @@ static names objects[] = {
 static int selectnames(unsigned char* elements, race_s* race, gender_s gender)
 {
 	auto p = elements;
-	for(int i = 0; i < sizeof(objects) / sizeof(objects[0]); i++)
+	for(int i = 1; i < sizeof(objects) / sizeof(objects[0]); i++)
 	{
 		if(objects[i].gender != gender)
 			continue;

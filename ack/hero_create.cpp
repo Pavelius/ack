@@ -110,6 +110,29 @@ void creature::chooseskills(bool interactive, const char* skill_name, skill_s* s
 	}
 }
 
+void creature::chooseequipment(bool interactive)
+{
+	switch(type)
+	{
+	case Fighter:
+		wear[MeleeWeapon] = SwordLong;
+		wear[Torso] = LeatherArmour;
+		break;
+	case Mage:
+		wear[MeleeWeapon] = Staff;
+		break;
+	case Cleric:
+		wear[MeleeWeapon] = Mace;
+		wear[SecondanaryWeapon] = Shield;
+		wear[Torso] = LeatherArmour;
+		break;
+	case Theif:
+		wear[MeleeWeapon] = SwordShort;
+		wear[Torso] = LeatherArmour;
+		break;
+	}
+}
+
 static void choose_class_general(creature* player, bool interactive, int count)
 {
 	player->chooseskills(interactive, "общий", general_skills, sizeof(general_skills) / sizeof(general_skills[0]), count);
