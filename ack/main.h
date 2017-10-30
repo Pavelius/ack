@@ -143,6 +143,19 @@ struct damageinfo
 	dice				damage;
 	item*				weapon;
 };
+struct monster_i
+{
+	const char*			name[3];
+	race_s				race;
+	gender_s			gender;
+	class_s				type;
+	alignment_s			alignment;
+	char				level;
+	int					experience;
+	char				ac;
+	unsigned char		ability[6];
+	dice				encounters[4];
+};
 struct creature
 {
 	race_s				race;
@@ -150,6 +163,7 @@ struct creature
 	class_s				type;
 	alignment_s			alignment;
 	unsigned char		level;
+	monster_i*			monster;
 	//
 	void				add(skill_s id, int value) { proficiency[id] += value; }
 	bool				attack(creature* enemy, bool interactive, int bonus = 0, bool flat_footed = false, wear_s weapon = MeleeWeapon);
@@ -189,7 +203,7 @@ private:
 	unsigned char		ability[Charisma + 1];
 	unsigned char		proficiency[LastSkill + 1];
 	unsigned char		spell_prepared[LastSkill + 1];
-	const char*			name;
+	unsigned char		name;
 };
 namespace game
 {
@@ -211,11 +225,12 @@ namespace logs
 {
 	struct state
 	{
+		const char*		information;
+		creature*		player;
 		state();
 		~state();
-	private:
-		const char*		information;
 	};
 }
+extern logs::state		logc;
 extern creature*		players[7];
 char*					toupper(char* result, const char* format);

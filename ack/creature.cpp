@@ -15,7 +15,11 @@ void creature::clear()
 
 const char* creature::getname() const
 {
-	return name;
+	if(name)
+		return game::getname(name);
+	if(monster)
+		return monster->name[1];
+	return "Никто";
 }
 
 int	creature::getbonus(ability_s id) const
@@ -38,6 +42,8 @@ int creature::getmaxhp() const
 
 int	creature::getarmor(bool flatfooted) const
 {
+	if(monster)
+		return monster->ac;
 	auto result = wear[Torso].getarmor();
 	result += wear[Head].getarmor();
 	result += wear[Legs].getarmor();
@@ -164,7 +170,7 @@ void creature::create(bool interactive, bool add_party)
 		levelup(interactive);
 	if(add_party)
 	{
-		name = game::getname(game::getrandomname(race, gender));
+		name = game::getrandomname(race, gender);
 		zcat(players, this);
 	}
 }

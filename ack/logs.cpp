@@ -26,7 +26,6 @@ static char						text_buffer[256 * 32];
 static char*					text_ptr = text_buffer;
 extern rect						sys_static_area;
 extern bool						sys_optimize_mouse_move;
-const char*						logs::information;
 command*						command_logs_clear;
 
 enum answer_tokens {
@@ -196,9 +195,10 @@ static int render_input()
 		x2 -= metrics::padding;
 		y2 -= metrics::padding;
 		int left_width = 0;
+		auto panel_information = logs::getpanel(0);
 		if(picture)
 			left_width = picture.width;
-		else if(logs::information)
+		else if(panel_information)
 			left_width = 300;
 		if(left_width)
 		{
@@ -211,9 +211,9 @@ static int render_input()
 				y1 += picture.height + metrics::padding;
 			}
 			// Left panel
-			if(logs::information)
+			if(panel_information)
 			{
-				szprint(temp, logs::information);
+				szprint(temp, panel_information);
 				y1 += draw::textf(x1, y1, x2 - x1, temp);
 			}
 			x2 = x1 - metrics::padding;

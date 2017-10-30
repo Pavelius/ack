@@ -4,9 +4,12 @@ int	main(int argc, char *argv[])
 {
 	logs::open("ACK");
 	auto hero_size = sizeof(creature);
-	creature players[4];
+	creature players[5];
 	players[0].create(false, true);
 	players[1].create(false, true);
+	players[2].create(false, true);
+	players[3].create(false, true);
+	players[4].create(false, true);
 	game::encounter(Ork);
 	return 0;
 }

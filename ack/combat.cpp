@@ -178,7 +178,7 @@ static void print_combatants(char* result)
 void game::encounter(monster_s type)
 {
 	logs::state push;
-	logs::information = "##%round\n%combatants";
+	logc.information = "##%round\n%combatants";
 	creature enemies[combatant_max];
 	memset(enemies, 0, sizeof(enemies));
 	memset(combatants, 0, sizeof(combatants));
@@ -200,7 +200,7 @@ void game::encounter(monster_s type)
 		e.side = PartySide;
 	}
 	roll_initiative(combatants);
-	logs::add("Внезапно показались %1i %2.", count, getstr(type));
+	logs::add("Внезапно из кустов показались %1i %2.", count, getstr(type));
 	while(true)
 	{
 		if(!combat_round(combatants))
