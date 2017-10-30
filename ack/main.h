@@ -218,3 +218,4 @@ namespace logs
 	};
 }
 extern creature*		players[7];
+char*					toupper(char* result, const char* format);

@@ -2,6 +2,7 @@
 
 adat<creature, 260>		heroes;
 creature*				players[7];
+static bool				show_rolls = true;
 
 static char ability_bonus[] = {-4,
 -4, -4, -3, -2, -2, -1, -1, -1, 0,
@@ -94,11 +95,19 @@ bool creature::attack(creature* enemy, bool interactive, int bonus, bool flat_fo
 	if(result < di.difficult)
 	{
 		if(interactive)
+		{
+			if(show_rolls)
+				logs::add("[-{%1i vs %2i}]", result, di.difficult);
 			logs::add("%1 промазал%2.", getname(), getA());
+		}
 		return true;
 	}
 	if(interactive)
+	{
+		if(show_rolls)
+			logs::add("[+{%1i vs %2i}]", result, di.difficult);
 		logs::add("%1 попал%2.", getname(), getA());
+	}
 	auto damage = di.damage.roll();
 	if(damage < 0)
 		damage = 1;
