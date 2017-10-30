@@ -10,7 +10,7 @@ int	main(int argc, char *argv[])
 	players[2].create(false, true);
 	players[3].create(false, true);
 	players[4].create(false, true);
-	game::encounter(Ork);
+	game::encounter(Ork, 2);
 	return 0;
 }
 

@@ -175,7 +175,7 @@ static void print_combatants(char* result)
 	}
 }
 
-void game::encounter(monster_s type)
+void game::encounter(monster_s type, int count)
 {
 	logs::state push;
 	logc.information = "##%round\n%combatants";
@@ -183,8 +183,11 @@ void game::encounter(monster_s type)
 	memset(enemies, 0, sizeof(enemies));
 	memset(combatants, 0, sizeof(combatants));
 	round = 0;
-	auto dice = game::getmonstercount(type, Dungeon);
-	auto count = dice.roll();
+	if(count == -1)
+	{
+		auto dice = game::getmonstercount(type, Dungeon);
+		count = dice.roll();
+	}
 	for(int i = 0; i < count; i++)
 	{
 		enemies[i].create(type);

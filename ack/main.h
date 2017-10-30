@@ -207,7 +207,7 @@ private:
 };
 namespace game
 {
-	void				encounter(monster_s type);
+	void				encounter(monster_s type, int count = -1);
 	unsigned char*		getattack(class_s id);
 	int					getdice(class_s id);
 	int*				getexperience(class_s type);
@@ -225,8 +225,8 @@ namespace logs
 	struct state
 	{
 		const char*		information;
-		creature*		opponent;
-		creature*		player;
+		const creature*	opponent;
+		const creature*	player;
 		state();
 		~state();
 	};
