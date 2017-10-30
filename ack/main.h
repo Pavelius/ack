@@ -170,6 +170,7 @@ struct creature
 	int					getbonus(ability_s id) const;
 	class_s				getclass() const { return type; }
 	int					getdifficult(skill_s value) const;
+	int					gethp() const;
 	int					getinitiative() const;
 	const char*			getname() const;
 	int					getmaxhp() const;
@@ -205,5 +206,15 @@ namespace game
 	race_s				getrace(class_s id);
 	unsigned char		getrandomname(race_s race, gender_s gender);
 	bool				isgameover();
+}
+namespace logs
+{
+	struct state
+	{
+		state();
+		~state();
+	private:
+		const char*		information;
+	};
 }
 extern creature*		players[7];

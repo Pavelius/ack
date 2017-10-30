@@ -22,6 +22,11 @@ int	creature::getbonus(ability_s id) const
 	return maptbl(ability_bonus, (int)ability[id]);
 }
 
+int creature::gethp() const
+{
+	return hp;
+}
+
 int creature::getmaxhp() const
 {
 	auto result = mhp + getbonus(Constitution);

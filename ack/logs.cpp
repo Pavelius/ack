@@ -195,13 +195,21 @@ static int render_input()
 		y += metrics::padding;
 		x2 -= metrics::padding;
 		y2 -= metrics::padding;
+		int left_width = 0;
 		if(picture)
+			left_width = picture.width;
+		else if(logs::information)
+			left_width = 300;
+		if(left_width)
 		{
 			int y1 = metrics::padding;
-			int x1 = x2 - picture.width;
-			draw::blit(*draw::canvas, x1, metrics::padding, picture.width, picture.height, 0, picture, 0, 0);
-			draw::rectb({x1, y1, x2, y1 + picture.height}, colors::border);
-			y1 += picture.height + metrics::padding;
+			int x1 = x2 - left_width;
+			if(picture)
+			{
+				draw::blit(*draw::canvas, x1, metrics::padding, picture.width, picture.height, 0, picture, 0, 0);
+				draw::rectb({x1, y1, x2, y1 + picture.height}, colors::border);
+				y1 += picture.height + metrics::padding;
+			}
 			// Left panel
 			if(logs::information)
 			{
